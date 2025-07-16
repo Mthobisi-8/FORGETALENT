@@ -67,11 +67,31 @@ const Courses = () => {
   const translateZ = `calc((15px + 15px) + 0px)`;
   const rotateX = "1deg";
   const perspective = "100px";
+  const slideOverRef = useRef<HTMLDivElement | null>(null);
+  
 
     useEffect(() => {
     // Clear session storage to restart session-specific data
     sessionStorage.clear();
   }, []);
+
+    useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (slideOverRef.current && !slideOverRef.current.contains(event.target as Node)) {
+        setSelectedCourse(null);
+        setExpandedSubCourseIndex(null);
+      }
+    };
+    if (selectedCourse) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [selectedCourse]);
+
+ 
+
   return (
     <div className="min-h-screen flex flex-col relative">
       {/* Background Layer */}
@@ -220,52 +240,78 @@ const Courses = () => {
               */}
             </div>
 
-            <section className="mb-28">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                {filteredCourses.length > 0 ? (
-                  filteredCourses.map((course, index) => (
-                    <Card key={index} className="bg-gradient-to-b from-gray-700 to-black   border-gray-700 shadow-xl w-full h-[540px] flex flex-col group hover:bg-gradient-to-r hover:from-gray-950 hover:via-sky-950 hover:to-purple-950 hover:border-purple-800 rounded-2xl hover:shadow-purple-800">
-                      <CardHeader className="p-0">
-                        <img src={course.image} alt={course.title} className="w-full h-48 object-cover rounded-2xl" />
-                      </CardHeader>
-                      <div className="flex flex-col flex-grow p-6">
-                        <CardTitle className="text-sky-600 text-xl font-semibold mt-2 group-hover:text-white">
-                          {course.title}
-                        </CardTitle>
-                        <CardContent className="p-0 mt-4 flex-grow">
-                          <p className="text-purple-300 text-base mb-4 group-hover:text-pink-500">
-                            {course.description}
-                          </p>
-                          <div className="space-y-3 text-base text-purple-400 group-hover:text-sky-100">
-                            <p><span className="font-semibold">Certification:</span> {course.certification.toUpperCase()}</p>
-                            <p><span className="font-semibold">Format:</span> {course.format}</p>
-                          </div>
-                        </CardContent>
-                        <CardFooter className="p-0 mt-4">
-                          <Button className="w-full bg-purple-900 group-hover:bg-pink-900 text-lg py-6 rounded-2xl" onClick={() => setSelectedCourse(course)}>
-                            View Modules
-                          </Button>
-                        </CardFooter>
-                      </div>
-                    </Card>
-                  ))
-                ) : (
-                  <div className="col-span-full text-center">
-                    <p className="text-purple-400 text-xl">No courses found</p>
-                  </div>
-                )}
-              </div>
-            </section>
+ <section className="mb-28">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+    {filteredCourses.length > 0 ? (
+      filteredCourses.map((course, index) => (
+        <div
+          key={index}
+          onClick={() => setSelectedCourse(course)}
+          className="cursor-pointer"
+        >
+          <Card className="bg-gradient-to-b from-gray-700 to-black border-gray-700 shadow-xl w-full h-[540px] flex flex-col group hover:bg-gradient-to-r hover:from-gray-950 hover:via-sky-950 hover:to-purple-950 hover:border-purple-800 rounded-2xl hover:shadow-purple-800">
+            <CardHeader className="p-0">
+              <img
+                src={course.image}
+                alt={course.title}
+                className="w-full h-48 object-cover rounded-2xl"
+              />
+            </CardHeader>
+            <div className="flex flex-col flex-grow p-6">
+              <CardTitle className="text-sky-600 text-xl font-semibold mt-2 group-hover:text-white">
+                {course.title}
+              </CardTitle>
+              <CardContent className="p-0 mt-4 flex-grow">
+                <p className="text-purple-300 text-base mb-4 group-hover:text-pink-500">
+                  {course.description}
+                </p>
+                <div className="space-y-3 text-base text-purple-400 group-hover:text-sky-100">
+                  <p>
+                    <span className="font-semibold">Certification:</span>{" "}
+                    {course.certification.toUpperCase()}
+                  </p>
+                  <p>
+                    <span className="font-semibold">Format:</span>{" "}
+                    {course.format}
+                  </p>
+                </div>
+              </CardContent>
+              <CardFooter className="p-0 mt-4">
+                <Button className="w-full bg-purple-900 group-hover:bg-pink-900 text-lg py-6 rounded-2xl">
+                  View Modules
+                </Button>
+              </CardFooter>
+            </div>
+          </Card>
+        </div>
+      ))
+    ) : (
+      <div className="col-span-full text-center">
+        <p className="text-purple-400 text-xl">No courses found</p>
+      </div>
+    )}
+  </div>
+</section>
+
           </div>
 
-          <div className={clsx("fixed top-0 right-0 w-full max-w-md h-full bg-gray-900 group hover:bg-gradient-to-r hover:from-gray-950 hover:via-sky-950 hover:to-purple-950 border-l border-purple-800 shadow-2xl z-50 transition-transform duration-300 ease-in-out", selectedCourse ? "translate-x-0" : "translate-x-full")}>            
+                <div
+            ref={slideOverRef}
+            className={clsx(
+              "fixed top-0 right-0 w-full max-w-md h-full bg-gray-900 group hover:bg-gradient-to-r hover:from-gray-950 hover:via-sky-950 hover:to-purple-950 border-l border-purple-800 shadow-2xl z-50 transition-transform duration-300 ease-in-out",
+              selectedCourse ? "translate-x-0" : "translate-x-full"
+            )}
+          >
             <div className="flex flex-col h-full p-6 overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl text-sky-400 font-bold">{selectedCourse?.title} Modules</h2>
-                <button className="text-purple-400 hover:text-pink-500 text-xl" onClick={() => {
-                  setSelectedCourse(null);
-                  setExpandedSubCourseIndex(null);
-                }}>
+                <button
+                  className="text-purple-400 hover:text-pink-500 text-xl"
+                  onClick={() => {
+                    setSelectedCourse(null);
+                    setExpandedSubCourseIndex(null);
+                  }}
+                >
                   ✕
                 </button>
               </div>
@@ -275,25 +321,32 @@ const Courses = () => {
                     <li key={idx} className="text-purple-300 border-b border-purple-700 pb-2">
                       <button
                         onClick={() =>
-                          setExpandedSubCourseIndex(expandedSubCourseIndex === idx ? null : idx)
+                          setExpandedSubCourseIndex(
+                            expandedSubCourseIndex === idx ? null : idx
+                          )
                         }
                         className="text-left w-full text-purple-200 font-semibold hover:text-pink-500 text-xl"
                       >
                         {sub.title}
                       </button>
                       {expandedSubCourseIndex === idx && (
-                        <p className="mt-2 text-purple-200 font-semibold"><span className="text-sky-500 text-lg font-bold">Description : </span>{sub.description} 
-                        <br/>
-                        <span className="text-sky-500 text-xl font-bold">Price : </span>{sub.Cost}
-                        <br/>
-                        <span className=" text-sm text-red-500 font-bold animate-pulse">{sub.NB}</span>
-                        <a href="https://pay.yoco.com/forge-academy-pty-ltd" target="_blank" rel="noopener noreferrer" className="w-full block">
-                  <Button className="w-full bg-pink-900 text-lg py-5 rounded-xl mt-6 mb-4 italic font-serif8">
-                  Enroll
-                  </Button>
-                </a>
+                        <p className="mt-2 text-purple-200 font-semibold">
+                          <span className="text-sky-500 text-lg font-bold">Description : </span>{sub.description}
+                          <br />
+                          <span className="text-sky-500 text-xl font-bold">Price : </span>{sub.Cost}
+                          <br />
+                          <span className="text-sm text-red-500 font-bold animate-pulse">{sub.NB}</span>
+                          <a
+                            href="https://pay.yoco.com/forge-academy-pty-ltd"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full block"
+                          >
+                            <Button className="w-full bg-pink-900 text-lg py-5 rounded-xl mt-6 mb-4 italic font-serif8">
+                              Enroll
+                            </Button>
+                          </a>
                         </p>
-                       
                       )}
                     </li>
                   ))}
@@ -301,7 +354,6 @@ const Courses = () => {
               ) : (
                 <p className="text-purple-300">No modules available.</p>
               )}
-             
             </div>
           </div>
         </main>
@@ -426,7 +478,7 @@ const courses: Course[] = [
     price: "5000",
     image: "8.png",
     subCourses: [
-      { title: "COMING SOON", description: "" ,Cost:"R " ,NB:"PLEASE NOTE TO USE MODULE NAME AS REFERENCE WHEN MAKING PAYMENTS"},
+      { title: "COMING SOON", description: "" ,Cost:"R " ,NB:""},
       ],
   },
   

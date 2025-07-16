@@ -120,19 +120,21 @@ const InteractiveFeature: React.FC = () => {
         */
       `}</style>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto px-4">
+        <div className="flex flex-col items-center md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto px-4 justify-center w-full">
+
         {features.map((feature, index) => {
           const Icon = feature.icon;
           const isActive = activeIndex === index;
 
           return (
-            <Card
-              key={index}
-              className={`flip-card transform transition-all duration-300 cursor-pointer border-2 border-pink-950 rounded-t rounded-2xl hover:scale-105 ${
-                isActive ? "border-purple-500 shadow-lg" : ""
-              }`}
-              onClick={() => handleCardClick(index)}
-            >
+          <Card
+  key={index}
+  className={`flip-card  sm:w-[600px] transform transition-all duration-300 cursor-pointer border-2 border-pink-950 rounded-2xl hover:scale-105 ${
+    isActive ? "border-purple-500 shadow-lg" : ""
+  }`}
+  onClick={() => handleCardClick(index)}
+>
+
               <div
                 className="flip-card-inner"
                 style={{
