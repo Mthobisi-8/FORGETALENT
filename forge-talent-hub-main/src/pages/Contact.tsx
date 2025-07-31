@@ -16,6 +16,7 @@ const Contact: React.FC = () => {
     subject: "",
     message: "",
     number: "",
+    purpose: "General Inquiry",
   });
 
   const formStyle: React.CSSProperties = {
@@ -24,7 +25,7 @@ const Contact: React.FC = () => {
     flexDirection: 'column',
     gap: '10px',
     padding: '20px',
-    backgroundColor: 'rgb(17, 24, 39)', // bg-purple-900/20
+    backgroundColor: 'rgb(17, 24, 39)',
     borderRadius: '10px',
     overflow: 'hidden',
     perspective: '1000px',
@@ -33,19 +34,33 @@ const Contact: React.FC = () => {
     transition: 'all 0.3s ease-in-out',
     boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
     animation: 'formAnimation 0.1s ease-in-out',
-
   };
 
   const inputStyle: React.CSSProperties = {
     padding: '10px',
     borderRadius: '5px',
-    backgroundColor:  'rgb(17, 24, 39)',
+    backgroundColor: 'rgb(17, 24, 39)',
     transition: 'border-color 0.3s ease-in-out, background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.1s ease-in-out',
     transformStyle: 'preserve-3d',
     backfaceVisibility: 'hidden',
-    color: 'white', // text-purple-100
-    border: '2px solid rgba(rgb(46, 16, 101))', // border-purple-500/20
+    color: 'white',
+    border: '2px solid rgba(139, 92, 246, 0.2)',
     boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
+  };
+
+  const selectStyle: React.CSSProperties = {
+    ...inputStyle,
+    appearance: 'none',
+    paddingRight: '30px',
+    backgroundColor: 'rgb(17, 24, 39)', // Matches form background
+    backgroundImage: 'url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23E9D5FF%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3e%3cpolyline points=%226 9 12 15 18 9%22%3e%3c/polyline%3e%3c/svg%3e")',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 10px center',
+    backgroundSize: '12px',
+     transition: 'border-color 0.1s ease-in-out, background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+    color:'Black' ,
+    
+    
   };
 
   const textareaStyle: React.CSSProperties = {
@@ -55,8 +70,8 @@ const Contact: React.FC = () => {
     transition: 'border-color 0.1s ease-in-out, background-color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
     transformStyle: 'preserve-3d',
     backfaceVisibility: 'hidden',
-    color: 'white', // text-purple-100
-    border: '2px solid rgba(139, 92, 246, 0.2)', // border-purple-500/20
+    color: 'white',
+    border: '2px solid rgba(139, 92, 246, 0.2)',
     boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
     minHeight: '110px',
   };
@@ -65,8 +80,8 @@ const Contact: React.FC = () => {
     padding: '10px 20px',
     border: 'none',
     borderRadius: '5px',
-    backgroundColor: 'rgb(88, 28, 135)', // bg-purple-900/20
-    color: '#E9D5FF', // text-purple-100
+    backgroundColor: 'rgb(88, 28, 135)',
+    color: '#E9D5FF',
     fontSize: '16px',
     cursor: 'pointer',
     transformStyle: 'preserve-3d',
@@ -75,6 +90,15 @@ const Contact: React.FC = () => {
     transition: 'all 0.3s ease-in-out',
     boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
   };
+
+  const dropdownItemStyle: React.CSSProperties = {
+  padding: '10px',
+  color: 'white',
+  cursor: 'pointer',
+  transition: 'background-color 0.2s ease-in-out',
+  backgroundColor: 'rgb(17, 24, 39)', // Ensure item background matches form
+};
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +113,8 @@ const Contact: React.FC = () => {
       phone_number: formData.number,
       subject: formData.subject,
       message: formData.message,
-      to_email: "Nthabiseng.M@forgeacademy.co.za",
+      purpose: formData.purpose,
+      to_email: "recruitment@forgeacademy.co.za",
     };
 
     try {
@@ -98,7 +123,7 @@ const Contact: React.FC = () => {
         title: "Message Sent!",
         description: "Your message has been successfully sent. We will get back to you soon!",
       });
-      setFormData({ name: "", email: "", subject: "", message: "", number: "" });
+      setFormData({ name: "", email: "", subject: "", message: "", number: "", purpose: "General Inquiry" });
     } catch (error) {
       toast({
         title: "Error",
@@ -109,25 +134,22 @@ const Contact: React.FC = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-    useEffect(() => {
-    // Clear session storage to restart session-specific data
+  useEffect(() => {
     sessionStorage.clear();
   }, []);
-  return (
-    <div className="min-h-screen flex flex-col ">
-      {/* Background Layer */}
-      <div className="fixed inset-0 z-[-1] vr-background">
-  <div className="particle-layer" />
 
-  {/* Add a subtle overlay to soften background without hiding animation */}
-  <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-</div>
+  return (
+    <div className="min-h-screen flex flex-col">
+      <div className="fixed inset-0 z-[-1] vr-background">
+        <div className="particle-layer" />
+        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+      </div>
       <style>
         {`
           @keyframes formAnimation {
@@ -140,14 +162,15 @@ const Contact: React.FC = () => {
               opacity: 1;
             }
           }
-        `}
+        `
+        
+        }
       </style>
       <Header />
       <main className="flex-grow pt-24 mb-8">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="space-y-6 ">
+            <div className="space-y-6">
               <h1 className="text-3xl font-bold text-gradient text-gray-200 italic">Get in Touch</h1>
               <p className="font-bold text-gradient text-gray-50">
                 Don't forget to include your cell number in case we can't reach you through email:
@@ -161,7 +184,7 @@ const Contact: React.FC = () => {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'rotateX(-10deg)';
                 }}
-               className="bg-gray-300"
+                className="bg-gray-300"
               >
                 <Input
                   placeholder="Your Name"
@@ -173,8 +196,8 @@ const Contact: React.FC = () => {
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                     e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'scale(1.05) ';
-                    e.currentTarget.style.boxShadow = '0px 2px 4px ';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0px 2px 4px';
                     e.currentTarget.style.outline = 'none';
                   }}
                   onBlur={(e) => {
@@ -187,7 +210,7 @@ const Contact: React.FC = () => {
                     if (document.activeElement !== e.currentTarget) {
                       e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                       e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1.05) ';
+                      e.currentTarget.style.transform = 'scale(1.05)';
                       e.currentTarget.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.3)';
                     }
                   }}
@@ -211,8 +234,8 @@ const Contact: React.FC = () => {
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                     e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'scale(1.05) ';
-                    e.currentTarget.style.boxShadow = '0px 2px 4px ';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0px 2px 4px';
                     e.currentTarget.style.outline = 'none';
                   }}
                   onBlur={(e) => {
@@ -225,7 +248,7 @@ const Contact: React.FC = () => {
                     if (document.activeElement !== e.currentTarget) {
                       e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                       e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1.05) ';
+                      e.currentTarget.style.transform = 'scale(1.05)';
                       e.currentTarget.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.3)';
                     }
                   }}
@@ -249,8 +272,8 @@ const Contact: React.FC = () => {
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                     e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'scale(1.05) ';
-                    e.currentTarget.style.boxShadow = '0px 2px 4px ';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0px 2px 4px';
                     e.currentTarget.style.outline = 'none';
                   }}
                   onBlur={(e) => {
@@ -263,7 +286,7 @@ const Contact: React.FC = () => {
                     if (document.activeElement !== e.currentTarget) {
                       e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                       e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1.05) ';
+                      e.currentTarget.style.transform = 'scale(1.05)';
                       e.currentTarget.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.3)';
                     }
                   }}
@@ -274,9 +297,51 @@ const Contact: React.FC = () => {
                       e.currentTarget.style.transform = 'none';
                       e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset';
                     }
-                  
                   }}
                 />
+                <select className="text-black"
+                  name="purpose"
+                  value={formData.purpose}
+                  onChange={handleChange}
+                  required
+                  style={selectStyle}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
+                    e.currentTarget.style.backgroundColor = 'rgba(1, 1, 3, 0.2)';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0px 2px 4px';
+                    e.currentTarget.style.outline = 'none';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
+                    e.currentTarget.style.backgroundColor = 'rgb(139, 92, 246, 0.2)';
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset';
+                  }}
+                  onMouseEnter={(e) => {
+                    if (document.activeElement !== e.currentTarget) {
+                      e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
+                      e.currentTarget.style.backgroundColor = 'rgba(17, 24, 39 0.2)';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                      e.currentTarget.style.boxShadow = '0px 2px 4px rgba(17, 24, 39)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (document.activeElement !== e.currentTarget) {
+                      e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
+                      e.currentTarget.style.backgroundColor = 'rgb(139, 92, 246, 0.2)';
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset';
+                    }
+                  }}
+                >
+                  <option value="General Inquiry">Select </option>
+                  <option value="Support">Learnership</option>
+                  <option value="Partnership">Internship</option>
+                  <option value="Feedback">Courses </option>
+                  <option value="Corporate">Corporate </option>
+
+                </select>
                 <Input
                   placeholder="Subject"
                   name="subject"
@@ -287,8 +352,8 @@ const Contact: React.FC = () => {
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                     e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'scale(1.05) ';
-                    e.currentTarget.style.boxShadow = '0px 2px 4px ';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                    e.currentTarget.style.boxShadow = '0px 2px 4px';
                     e.currentTarget.style.outline = 'none';
                   }}
                   onBlur={(e) => {
@@ -301,7 +366,7 @@ const Contact: React.FC = () => {
                     if (document.activeElement !== e.currentTarget) {
                       e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                       e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1.05) ';
+                      e.currentTarget.style.transform = 'scale(1.05)';
                       e.currentTarget.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.3)';
                     }
                   }}
@@ -324,7 +389,7 @@ const Contact: React.FC = () => {
                   onFocus={(e) => {
                     e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                     e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.transform = 'scale(1.05) ';
+                    e.currentTarget.style.transform = 'scale(1.05)';
                     e.currentTarget.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.3)';
                     e.currentTarget.style.outline = 'none';
                   }}
@@ -338,7 +403,7 @@ const Contact: React.FC = () => {
                     if (document.activeElement !== e.currentTarget) {
                       e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.2)';
                       e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-                      e.currentTarget.style.transform = 'scale(1.05) ';
+                      e.currentTarget.style.transform = 'scale(1.05)';
                       e.currentTarget.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.3)';
                     }
                   }}
@@ -355,7 +420,7 @@ const Contact: React.FC = () => {
                   type="submit"
                   style={buttonStyle}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(107, 33, 168, 0.3)'; // Slightly darker purple-900/30 for hover
+                    e.currentTarget.style.backgroundColor = 'rgba(107, 33, 168, 0.3)';
                     e.currentTarget.style.fontSize = '17px';
                     e.currentTarget.style.transform = 'scale(1.05) rotateY(20deg)';
                   }}
@@ -369,8 +434,6 @@ const Contact: React.FC = () => {
                 </Button>
               </form>
             </div>
-
-            {/* Contact Information */}
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-gradient text-gray-200 italic">We are Here to Help</h2>
               <div className="space-y-4">
