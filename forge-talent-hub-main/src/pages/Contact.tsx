@@ -101,37 +101,35 @@ const Contact: React.FC = () => {
   
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const serviceID = "service_elglbxq";
-    const templateID = "template_jfmkniv";
-    const publicKey = "GZpn0xe2_QcxiSfgj";
-
-    const templateParams = {
-      from_name: formData.name,
-      from_email: formData.email,
-      phone_number: formData.number,
-      subject: formData.subject,
-      message: formData.message,
-      purpose: formData.purpose,
-      to_email: "recruitment@forgeacademy.co.za",
-    };
-
-    try {
-      await emailjs.send(serviceID, templateID, templateParams, publicKey);
-      toast({
-        title: "Message Sent!",
-        description: "Your message has been successfully sent. We will get back to you soon!",
-      });
-      setFormData({ name: "", email: "", subject: "", message: "", number: "", purpose: "General Inquiry" });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
-      });
-      console.error("Email sending error:", error);
-    }
+  e.preventDefault();
+  const serviceID = "service_elglbxq";
+  const templateID = "template_q0qduon";
+  const publicKey = "GZpn0xe2_QcxiSfgj";
+  const templateParams = {
+    from_name: formData.name,
+    from_email: formData.email.toLowerCase(), // Normalize email
+    phone_number: formData.number,
+    subject: formData.subject,
+    purpose: formData.purpose,
+    message: formData.message,
+    to_email: "recruitment@forgeacademy.co.za",
   };
+  console.log("Sending templateParams:", templateParams); // Debug log
+  try {
+    await emailjs.send(serviceID, templateID, templateParams, publicKey);
+    toast({
+      title: "Message Sent!",
+      description: "Your message has been successfully sent. We will get back to you soon!",
+    });
+    setFormData({ name: "", email: "", subject: "", message: "", number: "", purpose: "General Inquiry" });
+  } catch (error) {
+    console.error("Email sending error:", error); // Already present
+    toast({
+      title: "Error",
+      description: "Something went wrong. Please try again later.",
+    });
+  }
+};
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
